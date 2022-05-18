@@ -1,5 +1,6 @@
 let idTemp = ""
 let url = 'https://fancy-todo-loshaless.herokuapp.com/'
+let toDoList
 
 function onSignIn(googleUser) {
   let id_token = googleUser.getAuthResponse().id_token;
@@ -60,7 +61,7 @@ function delet(event, id) {
 
 function edit(id, title, description, status, due_date) {
   idTemp = id
-  $('#idEdit').text(`Edit Form Id ${id}`)
+  $('#idEdit').text(`Edit Form ${title}`)
   $('#edit-title').val(title)
   $('#edit-description').val(description)
   $(`#${status}`).prop("checked", true);
@@ -122,22 +123,24 @@ function fetchTodo() {
     }
   })
     .done(response => {
-      response.forEach(e => {
+      toDoList = response
+
+      response.forEach((e, index) => {
         let {id, title, description, status, due_date} = e
         $('#todo').append(`
-                <tr>
-                    <td> ${id}</td>
-                    <td> ${title}</td>
-                    <td> ${description}</td>
-                    <td> ${status}</td>
-                    <td> ${due_date.toString().split("T")[0]}</td>
-                    <td>
-                        <a onclick="edit(${id}, '${title}', '${description}','${status}','${due_date}')" class="btn btn-info">Edit</a> 
-                        <a onclick="changeStatus(event, ${id},'${status}' )" class="btn btn-warning">Change Status</a>
-                        <a onclick="delet(event, ${id})" class="btn btn-danger">Delete</a> 
-                    </td>       
-                <tr/>
-                `)
+          <tr>
+            <td> ${index + 1}</td>
+            <td> ${title}</td>
+            <td> ${description}</td>
+            <td> ${status}</td>
+            <td> ${due_date.toString().split("T")[0]}</td>
+            <td>
+                <a onclick="edit(${id}, '${title}', '${description}','${status}','${due_date}')" class="btn btn-info">Edit</a> 
+                <a onclick="changeStatus(event, ${id},'${status}' )" class="btn btn-warning">Change Status</a>
+                <a onclick="delet(event, ${id})" class="btn btn-danger">Delete</a> 
+            </td>       
+          <tr/>
+        `)
       });
       $('#allList').show()
     })
@@ -249,35 +252,35 @@ $(document).ready(function () {
     showLogin()
   })
 
-  $("#searchById").keyup(function () {
-    let foundId = $('#searchById').val()
-    if (foundId) {
-      $.ajax({
-        method: 'GET', url: `${url}todos/${foundId}`, headers: {
-          token: localStorage.getItem('token')
-        }
-      })
-        .done(response => {
-          $('#todo').empty()
-          let {id, title, description, status, due_date} = response
-          $('#todo').append(`
-                    <tr>
-                        <td> ${id}</td> 
-                        <td> ${title}</td>
-                        <td> ${description}</td>
-                        <td> ${status}</td>
-                        <td> ${due_date.toString().split("T")[0]}</td>
-                        <td>
-                            <a onclick="edit(${id}, '${title}', '${description}','${status}','${due_date}')" class="btn btn-info">Edit</a> 
-                            <a onclick="changeStatus(event, ${id})" class="btn btn-warning">Change Status</a>
-                            <a onclick="delet(event, ${id})" class="btn btn-danger">Delete</a> 
-                        </td>    
-                    <tr/>
-                    `)
-        })
-        .fail(() => {
-          $('#todo').empty()
-        })
+  $("#searchKey").keyup(function () {
+    $('#todo').empty()
+    let searchKey = $('#searchKey').val()
+
+    const filteredResponse = toDoList.filter((data) => {
+      return data.title.toUpperCase().includes(searchKey.toUpperCase())
+        || data.description.toUpperCase().includes(searchKey.toUpperCase())
+        || data.status.toUpperCase().includes(searchKey.toUpperCase())
+    })
+
+    if (filteredResponse) {
+      filteredResponse.forEach((e, index) => {
+        let {id, title, description, status, due_date} = e
+
+        $('#todo').append(`
+          <tr>
+            <td> ${index + 1}</td>
+            <td> ${title}</td>
+            <td> ${description}</td>
+            <td> ${status}</td>
+            <td> ${due_date.toString().split("T")[0]}</td>
+            <td>
+                <a onclick="edit(${id}, '${title}', '${description}','${status}','${due_date}')" class="btn btn-info">Edit</a> 
+                <a onclick="changeStatus(event, ${id},'${status}' )" class="btn btn-warning">Change Status</a>
+                <a onclick="delet(event, ${id})" class="btn btn-danger">Delete</a> 
+            </td>       
+          <tr/>
+        `)
+      });
     } else {
       showHome()
     }

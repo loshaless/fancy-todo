@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "fancy-todo-loshaless"
-  }
+    "default": "todo-hansel-ca79b",
+    "todo-hansel": "todo-hansel-ca79b"
+  },
+  "targets": {}
 }

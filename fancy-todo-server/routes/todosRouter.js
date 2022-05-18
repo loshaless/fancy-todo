@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 const todoController = require('../controllers/todoController')
 const authentication = require('../middlewares/authentication')
 const authorization = require('../middlewares/authorization')

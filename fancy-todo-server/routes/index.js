@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 const todosRouter = require('./todosRouter')
 const userController = require('../controllers/userController')
 const holidaysConstroller = require('../controllers/holidayController')

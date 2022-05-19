@@ -6,5 +6,5 @@ Tech used on client: html, css, javascript, jQuery <br/>
 Deployed at: https://todo-hansel-ca79b.web.app/
 
 For Testing: <br/>
-email: admin@mail.com
+email: admin@mail.com <br/>
 password: admin
